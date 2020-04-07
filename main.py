@@ -5,6 +5,11 @@ import numpy as np
 import NEAT
 
 
+def plot_running_avg(totalrewards):
+    N = len(totalrewards)
+    running_avg = np.empty(N)
+    for t in range(N):
+        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
 
 env = gym.make('CartPole-v0').env
 
@@ -88,8 +93,10 @@ for i in range(Gen):
         with model:
             all_neuron = int(n[0][-1] + 1)
             sensor_nodes = nengo.Node(envI.sensor)
-            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim)
-            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
+            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim,
+                                            neuron_type=nengo.Izhikevich())
+            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions,
+                                            neuron_type=nengo.Izhikevich())
             nengo.Connection(sensor_nodes,sensing_neuron.neurons)
             middle_neurons = {}
 
@@ -113,16 +120,14 @@ for i in range(Gen):
                         nengo.Connection(middle_neurons[k[0]], action_neurons[k[0]], synapse=tau)
         simulator = nengo_ocl.Simulator(model)
         a = 200000
-        for _ in range(a):
-            simulator.step()
+        with nengo_ocl.Simulator(model) as sim:
+            sim.run(90.0)
         print("Reward:"+str(sum(envI.reward_arr)))
         score_list.append(sum(envI.reward_arr))
-        
+
     sum_score = sum(score_list)
     for z in score_list:
         prob_list.append(z/sum_score)
-    
-        
 
 
 
