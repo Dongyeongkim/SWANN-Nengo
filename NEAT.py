@@ -92,19 +92,44 @@ def crossover(gene_pool, prob_list):
     crossovered_gene_pool_list = []
     for i in range(int(len(gene_pool) / 2)):
         choiced_list.append(adapted_genes[2 * i:2 * i + 2])
-    gene1 = []
-    gene2 = []
+
     for choiced in choiced_list:
-        t = rd.randint(0, 1)
-        if t == 0:
-            gene1.append(choiced[0])
-            gene2.append(choiced[1])
+        gene1 = []
+        gene2 = []
+        if len(choiced[0]) > len(choiced[1]):
+            for i in range(len(choiced[1])):
+                t = rd.randint(0, 1)
+                if t == 0:
+                    gene1.append(choiced[0][i])
+                    gene2.append(choiced[1][i])
+                else:
+                    gene1.append(choiced[1][i])
+                    gene2.append(choiced[0][i])
+            gene1.append(choiced[0][len(choiced[1]):len(choiced[0])])
+        elif len(choiced[0]) < len(choiced[1]):
+            for j in range(len(choiced[1])):
+                t = rd.randint(0, 1)
+                if t == 0:
+                    gene1.append(choiced[0][j])
+                    gene2.append(choiced[1][j])
+                else:
+                    gene1.append(choiced[1][j])
+                    gene2.append(choiced[0][j])
+            gene2.append(choiced[0][len(choiced[0]):len(choiced[1])])
         else:
-            gene1.append(choiced[1])
-            gene2.append(choiced[0])
-    crossovered_gene_pool_list.append(gene1)
-    crossovered_gene_pool_list.append(gene2)
+            for k in range(len(choiced[0])):
+                t = rd.randint(0,1)
+                if t == 0:
+                    gene1.append(choiced[0][k])
+                    gene2.append(choiced[1][k])
+                else:
+                    gene1.append(choiced[1][k])
+                    gene2.append(choiced[0][k])
+        crossovered_gene_pool_list.append(gene1)
+        crossovered_gene_pool_list.append(gene2)
     return crossovered_gene_pool_list
+
+
 
 
 
