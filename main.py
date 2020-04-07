@@ -5,11 +5,6 @@ import numpy as np
 import NEAT
 
 
-def plot_running_avg(totalrewards):
-    N = len(totalrewards)
-    running_avg = np.empty(N)
-    for t in range(N):
-        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
 
 env = gym.make('CartPole-v0').env
 
