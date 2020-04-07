@@ -88,10 +88,8 @@ for i in range(Gen):
         with model:
             all_neuron = int(n[0][-1] + 1)
             sensor_nodes = nengo.Node(envI.sensor)
-            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim,
-                                            neuron_type=nengo.Izhikevich())
-            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions,
-                                            neuron_type=nengo.Izhikevich())
+            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim)
+            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
             nengo.Connection(sensor_nodes,sensing_neuron.neurons)
             middle_neurons = {}
 
