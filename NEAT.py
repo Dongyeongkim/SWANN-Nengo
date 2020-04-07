@@ -44,6 +44,7 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability):
     mutated_gene_pool_list = []
     for gene in gene_pool:
         gene_node_list = []
+        print(gene)
         for nuc in gene:
             gene_node_list.append(nuc[0])
             gene_node_list.append(nuc[1])
@@ -105,7 +106,8 @@ def crossover(gene_pool, prob_list):
                 else:
                     gene1.append(choiced[1][i])
                     gene2.append(choiced[0][i])
-            gene1.append(choiced[0][len(choiced[1]):len(choiced[0])])
+            for h in choiced[0][len(choiced[0]):len(choiced[1])]:
+                gene1.append(h)
         elif len(choiced[0]) < len(choiced[1]):
             for j in range(len(choiced[0])):
                 t = rd.randint(0, 1)
@@ -115,7 +117,8 @@ def crossover(gene_pool, prob_list):
                 else:
                     gene1.append(choiced[1][j])
                     gene2.append(choiced[0][j])
-            gene2.append(choiced[0][len(choiced[0]):len(choiced[1])])
+            for r in choiced[1][len(choiced[0]):len(choiced[1])]:
+                gene2.append(r)
         else:
             for k in range(len(choiced[0])):
                 t = rd.randint(0,1)
@@ -128,6 +131,8 @@ def crossover(gene_pool, prob_list):
         crossovered_gene_pool_list.append(gene1)
         crossovered_gene_pool_list.append(gene2)
     return crossovered_gene_pool_list
+
+
 
 
 
