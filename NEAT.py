@@ -98,12 +98,12 @@ def crossover(gene_pool, prob_list):
         check_mark = []
         check_mark_2 = []
         for i in range(len(choiced[0])):
-            if rd.randint(0, 2) == 0:
+            if rd.randint(0, 1) == 0:
                 check_mark.append(0)
             else:
                 check_mark.append(1)
         for i in range(len(choiced[0])):
-            if rd.randint(0, 2) == 0:
+            if rd.randint(0, 1) == 0:
                 check_mark_2.append(1)
             else:
                 check_mark_2.append(0)
@@ -111,8 +111,8 @@ def crossover(gene_pool, prob_list):
             gene1.append(choiced[indic][i])
         for j, indicc in enumerate(check_mark_2):
             gene2.append(choiced[indicc][j])
-        crossovered_gene_pool_list.append([gene1])
-        crossovered_gene_pool_list.append([gene2])
+        crossovered_gene_pool_list.append(gene1)
+        crossovered_gene_pool_list.append(gene2)
     return crossovered_gene_pool_list
 
 
