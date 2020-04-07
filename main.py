@@ -5,6 +5,11 @@ import numpy as np
 import NEAT
 
 
+def plot_running_avg(totalrewards):
+    N = len(totalrewards)
+    running_avg = np.empty(N)
+    for t in range(N):
+        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
 
 env = gym.make('CartPole-v0').env
 
@@ -48,6 +53,8 @@ tau = 0.01
 fast_tau = 0
 slow_tau = 0.01
 
+n_action =2
+
 envI = EnvironmentInterface(env)
 
 state_dimensions = envI.state_dim
@@ -68,14 +75,17 @@ if is_monitor:
 Gen = int(input('Generation_number'))
 
 for i in range(Gen):
+    score_list = []
+    prob_list = []
     if i == 0:
         gene_list = NEAT.generate_first_generation(96,4,2).copy()
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
-        gene_list = NEAT.crossover(gene_list,score_list)
+        gene_list = NEAT.crossover(gene_list,prob_list)
         gene_list = NEAT.mutate(gene_list,0.25,0.25)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
-    score_list = []
+        score_list = []
+        prob_list = []
     for n in translated:
         node = n[0]
         connection = n[1]
@@ -83,8 +93,10 @@ for i in range(Gen):
         with model:
             all_neuron = int(n[0][-1] + 1)
             sensor_nodes = nengo.Node(envI.sensor)
-            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim)
-            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
+            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim,dimensions=envI.state_dim,
+                                            neuron_type=nengo.Izhikevich())
+            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions,
+                                            neuron_type=nengo.Izhikevich())
             nengo.Connection(sensor_nodes,sensing_neuron.neurons)
             middle_neurons = {}
 
@@ -94,7 +106,7 @@ for i in range(Gen):
                 elif f < envI.n_actions:
                     pass
                 else:
-                    middle_neurons[f] = nengo.Ensemble(1, dimensions=1)
+                    middle_neurons[f] = nengo.Ensemble(1, dimensions=1, neuron_type=nengo.Izhikevich())
             for k in connection:
                 if k[0] < envI.state_dim:
                     if k[1] < envI.n_actions:
@@ -107,18 +119,17 @@ for i in range(Gen):
                     else:
                         nengo.Connection(middle_neurons[k[0]], action_neurons[k[0]], synapse=tau)
         simulator = nengo_ocl.Simulator(model)
-        for _ in range(200000):
+        a = 200000
+        for _ in range(a):
             simulator.step()
-            reward = envI.get_reward()
-            print(reward)
-
-
-
-
-
-
-
-
+        print("Reward:"+str(sum(envI.reward_arr)))
+        score_list.append(sum(envI.reward_arr))
+        
+    sum_score = sum(score_list)
+    for z in score_list:
+        prob_list.append(z/sum_score)
+    
+        
 
 
 
