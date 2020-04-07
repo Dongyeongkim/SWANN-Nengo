@@ -4,13 +4,6 @@ import nengo_ocl
 import numpy as np
 import NEAT
 
-
-def plot_running_avg(totalrewards):
-    N = len(totalrewards)
-    running_avg = np.empty(N)
-    for t in range(N):
-        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
-
 env = gym.make('CartPole-v0').env
 
 class EnvironmentInterface(object):
@@ -73,10 +66,9 @@ if is_monitor:
     env.reset()
 
 Gen = int(input('Generation_number'))
-
+prob_list = []
 for i in range(Gen):
     score_list = []
-    prob_list = []
     if i == 0:
         gene_list = NEAT.generate_first_generation(96,4,2).copy()
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
@@ -85,6 +77,7 @@ for i in range(Gen):
         gene_list = NEAT.mutate(gene_list,0.25,0.25)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         score_list = []
+        prob_list = []
  
     for n in translated:
         node = n[0]
