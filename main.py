@@ -48,8 +48,6 @@ tau = 0.01
 fast_tau = 0
 slow_tau = 0.01
 
-n_action =2
-
 envI = EnvironmentInterface(env)
 
 state_dimensions = envI.state_dim
@@ -68,8 +66,6 @@ if is_monitor:
     env.reset()
 
 Gen = int(input('Generation_number'))
-inp = int(input('please input input size'))
-outp = int(input('please input output size'))
 
 for i in range(Gen):
     if i == 0:
@@ -95,20 +91,20 @@ for i in range(Gen):
             middle_neurons = {}
 
             for f in node:
-                if f < inp-1:
+                if f < envI.state_dim:
                     pass
-                elif f < outp-1:
+                elif f < envI.n_actions:
                     pass
                 else:
                     middle_neurons[f] = nengo.Ensemble(1, dimensions=1, neuron_type=nengo.Izhikevich())
             for k in connection:
-                if k[0] < inp-1:
-                    if k[1] < outp-1:
+                if k[0] < envI.state_dim:
+                    if k[1] < envI.n_actions:
                         nengo.Connection(sensing_neuron.neurons[k[0]], action_neurons[k[1]], synapse=fast_tau)
                     else:
                         nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau)
                 else:
-                    if k[1] < outp-1:
+                    if k[1] < envI.n_actions:
                         nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau)
                     else:
                         nengo.Connection(middle_neurons[k[0]], action_neurons[k[0]], synapse=tau)
@@ -117,6 +113,10 @@ for i in range(Gen):
             simulator.step()
             reward = envI.get_reward()
             print(reward)
+
+
+
+
 
 
 
