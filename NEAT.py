@@ -80,6 +80,7 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability):
 
 
 def crossover(gene_pool, prob_list):
+
     check_list = list(range(len(gene_pool)))
     checked = np.random.choice(check_list, size=len(gene_pool), p=prob_list)
 
@@ -91,28 +92,18 @@ def crossover(gene_pool, prob_list):
     crossovered_gene_pool_list = []
     for i in range(int(len(gene_pool) / 2)):
         choiced_list.append(adapted_genes[2 * i:2 * i + 2])
-
+    gene1 = []
+    gene2 = []
     for choiced in choiced_list:
-        gene1 = []
-        gene2 = []
-        check_mark = []
-        check_mark_2 = []
-        for i in range(len(choiced[0])):
-            if rd.randint(0, 1) == 0:
-                check_mark.append(0)
-            else:
-                check_mark.append(1)
-        for i in range(len(choiced[0])):
-            if rd.randint(0, 1) == 0:
-                check_mark_2.append(1)
-            else:
-                check_mark_2.append(0)
-        for i, indic in enumerate(check_mark):
-            gene1.append(choiced[indic][i])
-        for j, indicc in enumerate(check_mark_2):
-            gene2.append(choiced[indicc][j])
-        crossovered_gene_pool_list.append(gene1)
-        crossovered_gene_pool_list.append(gene2)
+        t = rd.randint(0, 1)
+        if t == 0:
+            gene1.append(choiced[0])
+            gene2.append(choiced[1])
+        else:
+            gene1.append(choiced[1])
+            gene2.append(choiced[0])
+    crossovered_gene_pool_list.append(gene1)
+    crossovered_gene_pool_list.append(gene2)
     return crossovered_gene_pool_list
 
 
