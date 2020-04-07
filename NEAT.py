@@ -107,7 +107,7 @@ def crossover(gene_pool, prob_list):
                     gene2.append(choiced[0][i])
             gene1.append(choiced[0][len(choiced[1]):len(choiced[0])])
         elif len(choiced[0]) < len(choiced[1]):
-            for j in range(len(choiced[1])):
+            for j in range(len(choiced[0])):
                 t = rd.randint(0, 1)
                 if t == 0:
                     gene1.append(choiced[0][j])
