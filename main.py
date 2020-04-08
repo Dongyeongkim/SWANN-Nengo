@@ -1,3 +1,4 @@
+import time
 import gym
 import nengo
 import nengo_ocl
