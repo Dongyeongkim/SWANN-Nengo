@@ -69,13 +69,13 @@ prob_list = []
 for i in range(Gen):
     score_list = []
     if i == 0:
-        gene_list = NEAT.generate_first_generation(10, 4, 2).copy()
+        gene_list = NEAT.generate_first_generation(192, 4, 2).copy()
         print(gene_list)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
         gene_list = NEAT.crossover(gene_list, prob_list)
         print(gene_list)
-        gene_list = NEAT.mutate(gene_list, 0.25, 0.25)
+        gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         print(translated)
         score_list = []
