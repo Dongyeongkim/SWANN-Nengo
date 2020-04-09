@@ -98,7 +98,7 @@ for i in range(Gen):
             sensor_nodes = nengo.Node(envI.sensor)
             sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim, dimensions=envI.state_dim)
             action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
-            step_node = nengo.Node(envI.step, size_in=2)
+            step_node = nengo.Node(envI.step, size_in=envI.n_actions)
             nengo.Connection(action_neurons, step_node, synapse=fast_tau)
             nengo.Connection(sensor_nodes, sensing_neuron.neurons)
             middle_neurons = {}
