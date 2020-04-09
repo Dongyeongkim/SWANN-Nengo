@@ -83,7 +83,6 @@ for i in range(Gen):
         print(gene_list)
         gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
-        print(translated)
         score_list = []
         prob_list = []
 
@@ -102,7 +101,7 @@ for i in range(Gen):
             nengo.Connection(action_neurons, step_node, synapse=fast_tau)
             nengo.Connection(sensor_nodes, sensing_neuron.neurons)
             middle_neurons = {}
-            node = list(set(node)); print(node)
+            node = list(set(node))
             for f in node:
                 if f < envI.state_dim:
                     pass
@@ -129,8 +128,8 @@ for i in range(Gen):
         with nengo_ocl.Simulator(model) as sim:
             sim.run(3.0)
         avg_score_list = average(np.array(envI.reward_arr))
-        print("Reward:" + str(np.sum(avg_score_list))
-        score_list.append(np.sum(avg_score_list))
+        print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)))
+        score_list.append(np.sum(avg_score_list)/len(avg_score_list))
         print(score_list)
     sum_score = sum(score_list)
     for z in score_list:
