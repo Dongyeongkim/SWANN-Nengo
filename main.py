@@ -7,6 +7,12 @@ import NEAT
 
 env = gym.make('CartPole-v0').env
 
+def average(totalrewards):
+    N = len(totalrewards)
+    running_avg = np.empty(N)
+    for t in range(N):
+        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
+    return running_avg
 
 class EnvironmentInterface(object):
     def __init__(self, env, stepSize=5):
@@ -122,8 +128,9 @@ for i in range(Gen):
         simulator = nengo_ocl.Simulator(model)
         with nengo_ocl.Simulator(model) as sim:
             sim.run(3.0)
-        print("Reward:" + str(sum(envI.reward_arr)))
-        score_list.append(sum(envI.reward_arr))
+        avg_score_list = average(np.array(envI.reward_arr))
+        print("Reward:" + str(np.sum(avg_score_list))
+        score_list.append(np.sum(avg_score_list))
         print(score_list)
     sum_score = sum(score_list)
     for z in score_list:
