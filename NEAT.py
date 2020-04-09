@@ -39,7 +39,8 @@ def generate_first_generation(gene_pool_size, input_neuron, output_neuron):
     return gene_pool_list
 
 
-def mutate(gene_pool, adding_node_probability, adding_connection_probability):
+def mutate(gene_pool, adding_node_probability, adding_connection_probability,
+           initial_active_connection_prob):
     gene_pool_list = []
     mutated_gene_pool_list = []
     for gene in gene_pool:
@@ -76,6 +77,12 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability):
                 fully_mutated_gene.append(rand_connection)
         else:
             pass
+        if rd.random() < initial_active_connection_prob:
+            rand_num = rd.randint(len(fully_mutated_gene))
+            del fully_mutated_gene[rand_num-1]
+        else:
+            pass
+            
         mutated_gene_pool_list.append(fully_mutated_gene)
     return mutated_gene_pool_list
 
