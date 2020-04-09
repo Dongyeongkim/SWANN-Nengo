@@ -78,8 +78,8 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
         else:
             pass
         if rd.random() < initial_active_connection_prob:
-            rand_num = rd.randint(len(fully_mutated_gene))
-            del fully_mutated_gene[rand_num-1]
+            rand_num = rd.randint(0,len(fully_mutated_gene)-1)
+            del fully_mutated_gene[rand_num]
         else:
             pass
             
