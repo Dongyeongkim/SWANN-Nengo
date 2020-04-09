@@ -44,7 +44,6 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability):
     mutated_gene_pool_list = []
     for gene in gene_pool:
         gene_node_list = []
-        print(gene)
         for nuc in gene:
             gene_node_list.append(nuc[0])
             gene_node_list.append(nuc[1])
@@ -66,10 +65,11 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability):
         for mnuc in node_mutated_gene:
             mnuc_node_list.append(mnuc[0])
             mnuc_node_list.append(mnuc[1])
+        num_of_node = len(fully_mutated_gene)
         mnuc_node_list = list(set(mnuc_node_list))
         if rd.random() < adding_connection_probability:
             try:
-                while True:
+                while len(mnuc_node_list)**2 != num_of_node:
                     rand_connection = rd.sample(mnuc_node_list, 2)
                     fully_mutated_gene.index(rand_connection)
             except ValueError:
