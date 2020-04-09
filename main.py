@@ -126,7 +126,7 @@ for i in range(Gen):
                         nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau)
         simulator = nengo_ocl.Simulator(model)
         with nengo_ocl.Simulator(model) as sim:
-            sim.run(3.0)
+            sim.run(30.0)
         avg_score_list = average(np.array(envI.reward_arr))
         print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)))
         score_list.append(np.sum(avg_score_list)/len(avg_score_list))
