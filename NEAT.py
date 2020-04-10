@@ -68,7 +68,9 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
             mnuc_node_list.append(mnuc[1])
         num_of_node = len(fully_mutated_gene)
         mnuc_node_list = list(set(mnuc_node_list))
+        mnuc_node_list.sort()
         if rd.random() < adding_connection_probability:
+            rand_connection = [rd.randint(0,mnuc_node_list[-1]),rd.randint(0,mnuc_node_list[-1])]
             fully_mutated_gene.append(rand_connection)
             fully_mutated_gene = list(set(map(tuple,fully_mutated_gene)))
         else:
