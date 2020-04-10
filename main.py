@@ -116,14 +116,14 @@ for i in range(Gen):
                     elif envI.n_actions <= k[1] < envI.state_dim:
                         nengo.Connection(sensing_neuron.neurons[k[0]],sensing_neuron.neurons[k[1]], synapse=tau)
                     else:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], middle_neurons[k[1]], synapse=tau)
+                        nengo.Connection(sensing_neuron.neurons[k[0]], middle_neurons[k[1]].neurons, synapse=tau)
                 else:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(middle_neurons[k[0]], action_neurons.neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]].neurons, action_neurons.neurons[k[1]], synapse=tau)
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(middle_neurons[k[0]], sensing_neuron.neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]].neurons, sensing_neuron.neurons[k[1]], synapse=tau)
                     else:
-                        nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
         simulator = nengo_ocl.Simulator(model)
         with nengo_ocl.Simulator(model) as sim:
             sim.run(30.0)
