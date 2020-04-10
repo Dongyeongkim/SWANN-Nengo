@@ -69,12 +69,8 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
         num_of_node = len(fully_mutated_gene)
         mnuc_node_list = list(set(mnuc_node_list))
         if rd.random() < adding_connection_probability:
-            try:
-                while len(mnuc_node_list)**2 != num_of_node:
-                    rand_connection = rd.sample(mnuc_node_list, 2)
-                    fully_mutated_gene.index(rand_connection)
-            except ValueError:
-                fully_mutated_gene.append(rand_connection)
+            fully_mutated_gene.append(rand_connection)
+            fully_mutated_gene = list(set(map(tuple,fully_mutated_gene)))
         else:
             pass
         if rd.random() < initial_active_connection_prob:
