@@ -138,6 +138,9 @@ for i in range(Gen):
             print(score_list)
         
     sum_score = sum(score_list)
+    f = open('reward/'+str(time.strftime('%c', time.localtime(time.time())))+'.txt', 'w')
+    f.write(str(score_list))
+    f.close()
     for z in score_list:
         prob_list.append(z / sum_score)
        
