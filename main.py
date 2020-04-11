@@ -76,11 +76,9 @@ for i in range(Gen):
     score_list = []
     if i == 0:
         gene_list = NEAT.generate_first_generation(192, 4, 2).copy()
-        print(gene_list)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
         gene_list = NEAT.crossover(gene_list, prob_list)
-        print(gene_list)
         gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         score_list = []
@@ -125,16 +123,25 @@ for i in range(Gen):
                     else:
                         nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
         simulator = nengo_ocl.Simulator(model)
-        with nengo_ocl.Simulator(model) as sim:
-            sim.run(30.0)
-        avg_score_list = average(np.array(envI.reward_arr))
-        print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)))
-        score_list.append(np.sum(avg_score_list)/len(avg_score_list))
-        print(score_list)
+        try:
+            with nengo_ocl.Simulator(model) as sim:
+                sim.run(200.0)
+            avg_score_list = average(np.array(envI.reward_arr))
+            print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)))
+            score_list.append(np.sum(avg_score_list)/len(avg_score_list))
+            print(score_list)
+       
+            
+        except nengo.exceptions.BuildError:
+            print("Reward:" +'0')
+            score_list.append(0)
+            print(score_list)
+        
     sum_score = sum(score_list)
     for z in score_list:
         prob_list.append(z / sum_score)
-
-
-
+       
+        
+        
+            
 
