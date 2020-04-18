@@ -40,7 +40,7 @@ def generate_first_generation(gene_pool_size, input_neuron, output_neuron):
 
 
 def mutate(gene_pool, adding_node_probability, adding_connection_probability,
-           initial_active_connection_prob):
+           initial_active_connection_prob,inp,outp):
     print(gene_pool)
     gene_pool_list = []
     mutated_gene_pool_list = []
@@ -86,7 +86,12 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
                 pass
             else:
                 rand_num = rd.randint(0,len(fully_mutated_gene)-1)
-                del fully_mutated_gene[rand_num]
+                if fully_mutated_gene[rand_num][0]<inp:
+                    pass
+                elif fully_mutated_gene[rand_num][1]<outp:
+                    pass
+                else:
+                    del fully_mutated_gene[rand_num]
         else:
             pass
         for b,n in enumerate(fully_mutated_gene):
@@ -147,4 +152,6 @@ def crossover(gene_pool, prob_list):
         crossovered_gene_pool_list.append(gene1)
         crossovered_gene_pool_list.append(gene2)
     return crossovered_gene_pool_list
+
+
 
