@@ -79,7 +79,7 @@ for i in range(Gen):
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
         gene_list = NEAT.crossover(gene_list, prob_list)
-        gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5)
+        gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5,env.observation_space.shape[0],env.action_space.n)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         score_list = []
         prob_list = []
