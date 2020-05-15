@@ -127,7 +127,7 @@ for i in range(Gen):
             with nengo_ocl.Simulator(model) as sim:
                 sim.run(200.0)
             avg_score_list = average(np.array(envI.reward_arr))
-            print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)))
+            print("Reward:" + str(np.sum(avg_score_list)/len(avg_score_list)*len(n[1]))
             score_list.append(np.sum(avg_score_list)/len(avg_score_list))
             print(score_list)
        
