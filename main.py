@@ -124,7 +124,6 @@ for i in range(Gen):
                             nengo.Connection(middle_neurons[k[0]].neurons, sensing_neuron.neurons[k[1]], synapse=tau)
                         else:
                             nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
-            simulator = nengo_ocl.Simulator(model)
             try:
                 with nengo_ocl.Simulator(model) as sim:
                     sim.run(20.0)
