@@ -85,57 +85,57 @@ for i in range(Gen):
         prob_list = []
 
     for n in translated:
-        envI = EnvironmentInterface(env)
-        state_dimensions = envI.state_dim
-        n_actions = envI.n_actions
-        node = n[0]
-        connection = n[1]
-        model = nengo.Network()
-        with model:
-            sensor_nodes = nengo.Node(envI.sensor)
-            sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim, dimensions=envI.state_dim)
-            action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
-            step_node = nengo.Node(envI.step, size_in=envI.n_actions)
-            nengo.Connection(action_neurons, step_node, synapse=fast_tau)
-            nengo.Connection(sensor_nodes, sensing_neuron.neurons)
-            middle_neurons = {}
-            node = list(set(node))
-            for f in node:
-                if f < envI.state_dim:
-                    pass
-                elif f < envI.n_actions:
-                    pass
-                else:
-                    middle_neurons[f] = nengo.Ensemble(1, dimensions=1)
-            for k in connection:
-                if k[0] < envI.state_dim:
-                    if k[1] < envI.n_actions:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], action_neurons.neurons[k[1]], synapse=fast_tau)
-                    elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(sensing_neuron.neurons[k[0]],sensing_neuron.neurons[k[1]], synapse=tau)
+        sco_var_env = []
+        for _ in range(10):
+            envI = EnvironmentInterface(env)
+            state_dimensions = envI.state_dim
+            n_actions = envI.n_actions
+            node = n[0]
+            connection = n[1]
+            model = nengo.Network()
+            with model:
+                sensor_nodes = nengo.Node(envI.sensor)
+                sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim, dimensions=envI.state_dim)
+                action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
+                step_node = nengo.Node(envI.step, size_in=envI.n_actions)
+                nengo.Connection(action_neurons, step_node, synapse=fast_tau)
+                nengo.Connection(sensor_nodes, sensing_neuron.neurons)
+                middle_neurons = {}
+                node = list(set(node))
+                for f in node:
+                    if f < envI.state_dim:
+                        pass
+                    elif f < envI.n_actions:
+                        pass
                     else:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], middle_neurons[k[1]].neurons, synapse=tau)
-                else:
-                    if k[1] < envI.n_actions:
-                        nengo.Connection(middle_neurons[k[0]].neurons, action_neurons.neurons[k[1]], synapse=tau)
-                    elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(middle_neurons[k[0]].neurons, sensing_neuron.neurons[k[1]], synapse=tau)
+                        middle_neurons[f] = nengo.Ensemble(1, dimensions=1)
+                for k in connection:
+                    if k[0] < envI.state_dim:
+                        if k[1] < envI.n_actions:
+                            nengo.Connection(sensing_neuron.neurons[k[0]], action_neurons.neurons[k[1]], synapse=fast_tau)
+                        elif envI.n_actions <= k[1] < envI.state_dim:
+                            nengo.Connection(sensing_neuron.neurons[k[0]],sensing_neuron.neurons[k[1]], synapse=tau)
+                        else:
+                            nengo.Connection(sensing_neuron.neurons[k[0]], middle_neurons[k[1]].neurons, synapse=tau)
                     else:
-                        nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
-        simulator = nengo_ocl.Simulator(model)
-        try:
-            with nengo_ocl.Simulator(model) as sim:
-                sim.run(200.0)
-            avg_score_list = average(np.array(envI.reward_arr))
-            print("Reward:" + str(np.sum(avg_score_list)/(len(avg_score_list)*len(n[1]))))
-            score_list.append(np.sum(avg_score_list)/(len(avg_score_list)*len(n[1])))
-            print(score_list)
-       
+                        if k[1] < envI.n_actions:
+                            nengo.Connection(middle_neurons[k[0]].neurons, action_neurons.neurons[k[1]], synapse=tau)
+                        elif envI.n_actions <= k[1] < envI.state_dim:
+                            nengo.Connection(middle_neurons[k[0]].neurons, sensing_neuron.neurons[k[1]], synapse=tau)
+                        else:
+                            nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
+            simulator = nengo_ocl.Simulator(model)
+            try:
+                with nengo_ocl.Simulator(model) as sim:
+                    sim.run(20.0)
+                    avg_score_list = average(np.array(envI.reward_arr))
+                    sco_var_env.append(np.sum(avg_score_list)/(len(avg_score_list)*len(n[1])))
             
-        except nengo.exceptions.BuildError:
-            print("Reward:" +'0')
-            score_list.append(0)
-            print(score_list)
+            except nengo.exceptions.BuildError:
+                sco_var_env.append(0)
+        print("Reward:" + str(sum(sco_var_env)/len(sco_var_env)))
+        score_list.append(sum(sco_var_env)/len(sco_var_env))
+        print(score_list)
         
     sum_score = sum(score_list)
     f = open('reward/'+str(time.strftime('%c', time.localtime(time.time())))+'.txt', 'w')
