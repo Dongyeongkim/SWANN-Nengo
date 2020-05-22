@@ -1,12 +1,12 @@
+import ray
 import gym
 import time
 import NEAT
 import nengo
 import nengo_ocl
 import numpy as np
-from multiprocessing import Pool
 
-
+ray.init()
 env = gym.make('CartPole-v0').env
 
 
@@ -16,7 +16,7 @@ def average(totalrewards):
     for t in range(N):
         running_avg[t] = totalrewards[max(0, t - 100):(t + 1)].mean()
     return running_avg
-
+@ray.remote
 def sim(n):
     tau = 0.01
     sco_var_env = []
@@ -117,8 +117,8 @@ for i in range(Gen):
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         score_list = []
         prob_list = []
-    pool = Pool(processes=len(gene_list))
-    score_list = pool.map(sim,translated)
+    score_list = [sim.remote(i) for i in translated]
+    score_list = ray.get(score_list)
     sum_score = sum(score_list)
     f = open('reward/' + str(time.strftime('%c', time.localtime(time.time()))) + '.txt', 'w')
     f.write(str(score_list))
