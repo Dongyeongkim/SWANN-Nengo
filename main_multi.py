@@ -60,7 +60,7 @@ def sim(n):
                         nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
         try:
             with nengo_dl.Simulator(model) as sim:
-                sim.run(20.0)
+                sim.run_steps(200)
                 avg_score_list = average(np.array(envI.reward_arr))
                 sco_var_env.append(np.sum(avg_score_list) / (len(avg_score_list) * len(n[1])))
 
@@ -70,7 +70,7 @@ def sim(n):
 
 
 class EnvironmentInterface(object):
-    def __init__(self, env, stepSize=5):
+    def __init__(self, env, stepSize=1):
         self.env = env
         self.n_actions = env.action_space.n
         self.state_dim = env.observation_space.shape[0]
