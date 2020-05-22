@@ -20,7 +20,7 @@ def average(totalrewards):
 def sim(n):
     tau = 0.01
     sco_var_env = []
-    for _ in range(10):
+    for _ in range(1):
         envI = EnvironmentInterface(env)
         state_dimensions = envI.state_dim
         n_actions = envI.n_actions
