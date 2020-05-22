@@ -16,7 +16,7 @@ def average(totalrewards):
     for t in range(N):
         running_avg[t] = totalrewards[max(0, t - 100):(t + 1)].mean()
     return running_avg
-@ray.remote
+@ray.remote(max_calls=1)
 def sim(n):
     tau = 0.01
     sco_var_env = []
