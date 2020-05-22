@@ -59,7 +59,7 @@ def sim(n):
                     else:
                         nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
         try:
-            with nengo_dl.Simulator(model) as sim:
+            with nengo_dl.Simulator(model,device="/gpu:0") as sim:
                 sim.run_steps(200)
                 avg_score_list = average(np.array(envI.reward_arr))
                 sco_var_env.append(np.sum(avg_score_list) / (len(avg_score_list) * len(n[1])))
