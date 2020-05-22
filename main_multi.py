@@ -3,7 +3,7 @@ import gym
 import time
 import NEAT
 import nengo
-import nengo_ocl
+import nengo_dl
 import numpy as np
 
 ray.init()
@@ -59,7 +59,7 @@ def sim(n):
                     else:
                         nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
         try:
-            with nengo_ocl.Simulator(model) as sim:
+            with nengo_dl.Simulator(model) as sim:
                 sim.run(20.0)
                 avg_score_list = average(np.array(envI.reward_arr))
                 sco_var_env.append(np.sum(avg_score_list) / (len(avg_score_list) * len(n[1])))
