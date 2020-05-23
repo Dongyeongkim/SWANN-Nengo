@@ -101,14 +101,15 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
     return mutated_gene_pool_list
 
 
-def crossover(gene_pool, prob_list):
-
-    check_list = list(range(len(gene_pool)))
-    checked = np.random.choice(check_list, size=len(gene_pool), p=prob_list)
-
+def crossover(gene_pool, score_list,tournament_size):
+    selected_genenum_list = []
+    sco_list = [score_list[i:i+tournament_size] for i in range(0, len(score_list), tournament_size)]
+    for i,prob in enumerate(sco_list):
+        selected_genenum_list.append(i*tournament_size+prob.index(max(prob)))
     adapted_genes = []
-    for check in checked:
-        adapted_genes.append(gene_pool[check])
+    for selected in selected_genenum_list:
+        adapted_genes.append(gene_pool[selected])
+    adapted_genes = adapted_genes*(len(gene_pool)/tournament_size)
     rd.shuffle(adapted_genes)
     choiced_list = []
     crossovered_gene_pool_list = []
