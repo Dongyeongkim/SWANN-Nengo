@@ -34,7 +34,7 @@ def sim(n):
             step_node = nengo.Node(envI.step, size_in=n_actions)
             nengo.Connection(action_neurons, step_node, synapse=tau)
             nengo.Connection(sensor_nodes, sensing_neuron.neurons)
-            middle_neurons = {}
+            middle_neurons = {}; middle_neurons.clear() 
             node = list(set(node))
             for f in node:
                 if f < envI.state_dim:
