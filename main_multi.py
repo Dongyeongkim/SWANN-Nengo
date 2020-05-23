@@ -106,17 +106,15 @@ class EnvironmentInterface(object):
 
 Gen = int(input('Generation_number'))
 for i in range(Gen):
-    prob_list = []
-    score_list = []
     if i == 0:
         gene_list = NEAT.generate_first_generation(192, 4, 2).copy()
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
         gene_list = NEAT.crossover(gene_list, prob_list)
-        gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5, env.observation_space.shape[0], env.action_space.n)
+        gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.1, env.observation_space.shape[0], env.action_space.n)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
-        score_list = []
-        prob_list = []
+    score_list = []
+    prob_list = []
     score_list = [sim.remote(i) for i in translated]
     score_list = ray.get(score_list)
     sum_score = sum(score_list)
