@@ -120,6 +120,4 @@ for i in range(Gen):
     f = open('reward/' + str(time.strftime('%c', time.localtime(time.time()))) + '.txt', 'w')
     f.write(str(score_list))
     f.close()
-    prob_check = np.array(score_list.copy())
-    prob_check = (prob_check-np.min(prob_check))/(np.max(prob_check)-np.min(prob_check))
-    prob_list = prob_check.copy()
+    prob_list = score_list
