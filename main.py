@@ -78,7 +78,7 @@ for i in range(Gen):
         gene_list = NEAT.generate_first_generation(192, 4, 2).copy()
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     else:
-        gene_list = NEAT.crossover(gene_list, prob_list)
+        gene_list = NEAT.crossover(gene_list, score_list, 8)
         gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.5,env.observation_space.shape[0],env.action_space.n)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
         score_list = []
@@ -140,8 +140,6 @@ for i in range(Gen):
     f = open('reward/'+str(time.strftime('%c', time.localtime(time.time())))+'.txt', 'w')
     f.write(str(score_list))
     f.close()
-    for z in score_list:
-        prob_list.append(z / sum_score)
        
         
         
