@@ -128,7 +128,7 @@ for i in range(Gen):
                 with nengo_dl.Simulator(model) as sim:
                     sim.run_steps(200)
                     avg_score_list = average(np.array(envI.reward_arr))
-                    sco_var_env.append(np.sum(avg_score_list)/(len(avg_score_list)*len(n[1])))
+                    sco_var_env.append(np.sum(avg_score_list)/(len(avg_score_list))-len(n[1]))
             
             except nengo.exceptions.BuildError:
                 sco_var_env.append(0)
