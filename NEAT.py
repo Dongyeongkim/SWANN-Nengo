@@ -109,7 +109,7 @@ def crossover(gene_pool, score_list,tournament_size):
     adapted_genes = []
     for selected in selected_genenum_list:
         adapted_genes.append(gene_pool[selected])
-    adapted_genes = adapted_genes*(len(gene_pool)/tournament_size)
+    adapted_genes = adapted_genes * int(len(gene_pool)/tournament_size)
     rd.shuffle(adapted_genes)
     choiced_list = []
     crossovered_gene_pool_list = []
