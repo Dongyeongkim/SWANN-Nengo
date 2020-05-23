@@ -9,7 +9,6 @@ import numpy as np
 ray.init()
 env = gym.make('CartPole-v0').env
 
-
 def average(totalrewards):
     N = len(totalrewards)
     running_avg = np.empty(N)
@@ -114,12 +113,13 @@ for i in range(Gen):
         gene_list = NEAT.mutate(gene_list, 0.25, 0.25, 0.1, env.observation_space.shape[0], env.action_space.n)
         translated = NEAT.translate_gene_into_nengo_param(gene_list)
     score_list = []
-    prob_list = []
+    prob_list = [] 
     score_list = [sim.remote(i) for i in translated]
     score_list = ray.get(score_list)
     sum_score = sum(score_list)
     f = open('reward/' + str(time.strftime('%c', time.localtime(time.time()))) + '.txt', 'w')
     f.write(str(score_list))
     f.close()
-    for z in score_list:
-        prob_list.append(z / sum_score)
+    prob_check = np.array(score_list.copy())
+    prob_check = (prob_check-np.min(prob_check))/(np.max(prob_check)-np.min(prob_check))
+    prob_list = prob_check.copy()
