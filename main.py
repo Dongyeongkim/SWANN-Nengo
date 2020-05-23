@@ -98,9 +98,9 @@ for i in range(Gen):
                 sensing_neuron = nengo.Ensemble(n_neurons=envI.state_dim, dimensions=envI.state_dim)
                 action_neurons = nengo.Ensemble(n_neurons=envI.n_actions, dimensions=envI.n_actions)
                 step_node = nengo.Node(envI.step, size_in=envI.n_actions)
-                nengo.Connection(action_neurons, step_node, synapse=fast_tau)
+                nengo.Connection(action_neurons, step_node, synapse=tau)
                 nengo.Connection(sensor_nodes, sensing_neuron.neurons)
-                middle_neurons = {}
+                middle_neurons = {};middle_neurons.clear()
                 node = list(set(node))
                 for f in node:
                     if f < envI.state_dim:
