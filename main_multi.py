@@ -105,8 +105,8 @@ class EnvironmentInterface(object):
             self.take_action(self.current_action)
 
 Gen = int(input('Generation_number'))
-prob_list = []
 for i in range(Gen):
+    prob_list = []
     score_list = []
     if i == 0:
         gene_list = NEAT.generate_first_generation(192, 4, 2).copy()
