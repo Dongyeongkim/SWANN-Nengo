@@ -45,18 +45,18 @@ def sim(n):
             for x, k in enumerate(connection):
                 if k[0] < envI.state_dim:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], action_neurons.neurons[k[1]], synapse=tau)
+                        nengo.Connection(sensing_neuron[k[0]], action_neurons[k[1]], synapse=tau,learning_type=nengo.Voja())
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], sensing_neuron.neurons[k[1]], synapse=tau)
+                        nengo.Connection(sensing_neuron[k[0]], sensing_neuron[k[1]], synapse=tau,learning_type=nengo.Voja())
                     else:
-                        nengo.Connection(sensing_neuron.neurons[k[0]], middle_neurons[k[1]].neurons, synapse=tau)
+                        nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau,learning_type=nengo.Voja())
                 else:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(middle_neurons[k[0]].neurons, action_neurons.neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau,learning_type=nengo.Voja())
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(middle_neurons[k[0]].neurons, sensing_neuron.neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]], sensing_neuron[k[1]], synapse=tau,learning_type=nengo.Voja())
                     else:
-                        nengo.Connection(middle_neurons[k[0]].neurons, middle_neurons[k[1]], synapse=tau)
+                        nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau,learning_type=nengo.Voja())
         try:
             with nengo_dl.Simulator(model,device="/gpu:0") as sim:
                 sim.run_steps(200)
