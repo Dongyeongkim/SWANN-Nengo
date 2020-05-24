@@ -6,7 +6,7 @@ import nengo
 import nengo_dl
 import numpy as np
 
-ray.init()
+ray.init(webui_host='127.0.0.1')
 env = gym.make('CartPole-v0').env
 
 def average(totalrewards):
