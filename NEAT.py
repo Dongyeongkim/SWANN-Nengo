@@ -72,8 +72,10 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
         mnuc_node_list = list(set(mnuc_node_list))
         mnuc_node_list.sort()
         if rd.random() < adding_connection_probability:
-            rand_connection = [rd.randint(0,mnuc_node_list[-1]),rd.randint(0,mnuc_node_list[-1])]
-            fully_mutated_gene.append(rand_connection)
+            rand_connection1 = [rd.randint(0,mnuc_node_list[-1]),mnuc_node_list+1]
+            rand_connection2 = [mnuc_node_list+1,rd.randint(0,mnuc_node_list[-1])]
+            fully_mutated_gene.append(rand_connection1)
+            fully_mutated_gene.append(rand_connection2)
             fully_mutated_gene_tup = set([tuple(fully_mutated_gene) for fully_mutated_gene in fully_mutated_gene])
             fmg_list = []
             for gene in fully_mutated_gene_tup:
