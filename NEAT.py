@@ -58,9 +58,8 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
         current_num = max(gene_info[0])
         for i in gene_info[1]:
             if rd.random() < adding_node_probability:
-                rint = rd.randint(0,current_num + 1)
-                node_mutated_gene.append([i[0], rint])
-                node_mutated_gene.append([rint, i[1]])
+                node_mutated_gene.append([i[0], current_num+1])
+                node_mutated_gene.append([current_num+1, i[1]])
             else:
                 node_mutated_gene.append(i)
         fully_mutated_gene = node_mutated_gene.copy()
@@ -72,10 +71,8 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
         mnuc_node_list = list(set(mnuc_node_list))
         mnuc_node_list.sort()
         if rd.random() < adding_connection_probability:
-            rand_connection1 = [rd.randint(0,mnuc_node_list[-1]),mnuc_node_list+1]
-            rand_connection2 = [mnuc_node_list+1,rd.randint(0,mnuc_node_list[-1])]
-            fully_mutated_gene.append(rand_connection1)
-            fully_mutated_gene.append(rand_connection2)
+            rand_connection = [rd.randint(0,mnuc_node_list[-1]),rd.randint(0,mnuc_node_list[-1])]
+            fully_mutated_gene.append(rand_connection)
             fully_mutated_gene_tup = set([tuple(fully_mutated_gene) for fully_mutated_gene in fully_mutated_gene])
             fmg_list = []
             for gene in fully_mutated_gene_tup:
@@ -89,12 +86,10 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
                 pass
             else:
                 rand_num = rd.randint(0,len(fully_mutated_gene)-1)
-                if fully_mutated_gene[rand_num][0]<inp:
-                    pass
-                elif fully_mutated_gene[rand_num][1]<outp:
-                    pass
-                else:
+                if (fully_mutated_gene[rand_num][0]>=inp) and (fully_mutated_gene[rand_num][1]>=outp):
                     del fully_mutated_gene[rand_num]
+                else:
+                    pass
         else:
             pass
         #for b,n in enumerate(fully_mutated_gene):
