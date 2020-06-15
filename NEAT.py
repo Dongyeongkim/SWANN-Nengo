@@ -83,7 +83,7 @@ def mutate(gene_pool, adding_node_probability, adding_connection_probability,
             pass
         if rd.random() < initial_active_connection_prob:
             if len(fully_mutated_gene) == 1:
-                pass
+                fully_mutated_gene = generate_first_generation(1, 4, 2)[0]
             else:
                 rand_num = rd.randint(0,len(fully_mutated_gene)-1)
                 if (fully_mutated_gene[rand_num][0]>=inp) and (fully_mutated_gene[rand_num][1]>=outp):
