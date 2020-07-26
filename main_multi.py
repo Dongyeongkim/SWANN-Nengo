@@ -20,7 +20,8 @@ def average(totalrewards):
 def sim(n):
     tau = 0.01
     sco_var_env = []
-    for _ in range(1):
+    weight_list = [-2,-1,1,2]
+    for i in weight_list:
         envI = EnvironmentInterface(env)
         state_dimensions = envI.state_dim
         n_actions = envI.n_actions
@@ -32,8 +33,8 @@ def sim(n):
             sensing_neuron = nengo.Ensemble(n_neurons=state_dimensions, dimensions=state_dimensions)
             action_neurons = nengo.Ensemble(n_neurons=n_actions, dimensions=n_actions)
             step_node = nengo.Node(envI.step, size_in=n_actions)
-            nengo.Connection(action_neurons, step_node, synapse=tau)
-            nengo.Connection(sensor_nodes, sensing_neuron.neurons)
+            nengo.Connection(action_neurons, step_node, synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+            nengo.Connection(sensor_nodes, sensing_neuron.neurons,solver=nengo.solvers.LstsqL2(weights=True))
             middle_neurons = {}; middle_neurons.clear() 
             node = list(set(node))
             for f in node:
@@ -46,18 +47,18 @@ def sim(n):
             for x, k in enumerate(connection):
                 if k[0] < envI.state_dim:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(sensing_neuron[k[0]], action_neurons[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(sensing_neuron[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(sensing_neuron[k[0]], sensing_neuron[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(sensing_neuron[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     else:
-                        nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                 else:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(middle_neurons[k[0]], sensing_neuron[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(middle_neurons[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     else:
-                        nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau,learning_rule_type=nengo.Voja())
+                        nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
         try:
             with nengo_dl.Simulator(model,device="/gpu:0") as sim:
                 sim.run(20.0)
