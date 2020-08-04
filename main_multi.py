@@ -47,21 +47,23 @@ def sim(n):
             for x, k in enumerate(connection):
                 if k[0] < envI.state_dim:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(sensing_neuron[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(sensing_neuron[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(sensing_neuron[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(sensing_neuron[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     else:
-                        nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(sensing_neuron[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                 else:
                     if k[1] < envI.n_actions:
-                        nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(middle_neurons[k[0]], action_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     elif envI.n_actions <= k[1] < envI.state_dim:
-                        nengo.Connection(middle_neurons[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(middle_neurons[k[0]], sensing_neuron[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
                     else:
-                        nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
+                        conn+str(x) = nengo.Connection(middle_neurons[k[0]], middle_neurons[k[1]], synapse=tau,solver=nengo.solvers.LstsqL2(weights=True))
         try:
-            with nengo_dl.Simulator(model,device="/gpu:0") as sim:
+            with nengo_dl.Simulator(model,device="/gpu:0",progress_bar=False) as sim:
                 sim.run(20.0)
+                for x in range(len(connection)):
+                    print(sim.data[conn+str(x)].weights)
                 avg_score_list = average(np.array(envI.reward_arr))
                 sco_var_env.append(np.sum(avg_score_list)/len(avg_score_list)-len(n[1]))
 
