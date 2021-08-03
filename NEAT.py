@@ -13,9 +13,9 @@ def translate_gene_into_nengo_param(gene_pool):
         gene_node_list.sort()
         gene_connection_list = gene.copy()
         gene_pool_list.append([gene_node_list, gene_connection_list])
-        f = open('gene/'+str(time.strftime('%c', time.localtime(time.time())))+'.txt', 'w')
-        f.write(str(gene_pool_list))
-        f.close()
+    f = open('gene/init.txt', 'w')
+    f.write(str(gene_pool_list))
+    f.close()
 
     return gene_pool_list
 
